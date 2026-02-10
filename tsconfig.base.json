@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "importHelpers": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "lib": [
-      "es2022"
-    ],
+    "lib": ["es2022"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
@@ -20,9 +19,7 @@
     "strict": true,
     "target": "es2022",
     "paths": {
-      "@packages/*": [
-        "packages/*"
-      ]
+      "@packages/*": ["packages/*"]
     }
   }
 }

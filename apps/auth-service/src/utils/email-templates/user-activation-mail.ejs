@@ -1,101 +1,128 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>NexBuy Activation Email</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-      /* Base */
-      body {
-        margin: 0;
-        padding: 0;
-        min-width: 100%;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        background-color: #fafafa;
-        color: #222222;
-      }
-      a {
-        color: #000;
-        text-decoration: none;
-      }
-      h1 {
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.25;
-        margin-top: 0;
-        margin-bottom: 15px;
-        text-align: center;
-      }
-      p {
-        margin-top: 0;
-        margin-bottom: 24px;
-      }
-      table td {
-        vertical-align: top;
-      }
-      /* Layout */
-      .email-wrapper {
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      .email-header {
-        background-color: #0070f3;
-        color: #ffffff;
-        padding: 24px;
-      }
-      .email-body {
-        padding: 24px;
-        background-color: #ffffff;
-      }
-      .email-footer {
-        padding: 24px;
-        background-color: #f6f6f6;
-      }
-      /* Buttons */
-      .button {
-        display: inline-block;
-        background-color: #0070f3;
-        color: #ffffff;
-        font-size: 16px;
-        font-weight: 700;
-        text-align: center;
-        text-decoration: none;
-        padding: 12px 24px;
-        border-radius: 4px;
-      }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background like Google */
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f0f2f5;
+            padding-bottom: 40px;
+        }
+
+        .main-card {
+            max-width: 520px; /* Google uses slightly narrower cards */
+            margin: 40px auto;
+            background-color: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 500;
+            color: #5f6368;
+            margin-bottom: 24px;
+        }
+
+        /* The signature blue "Nex" and black "Buy" */
+        .brand-n { color: #4285F4; }
+        .brand-e { color: #EA4335; }
+        .brand-x { color: #FBBC05; }
+
+        h1 {
+            color: #202124;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .message {
+            color: #3c4043;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .otp-box {
+            font-size: 32px;
+            color: #1a73e8; /* Google Blue */
+            font-weight: 500;
+            letter-spacing: 4px;
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .footer {
+            max-width: 520px;
+            margin: 0 auto;
+            text-align: center;
+            color: #70757a;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #dadce0;
+            margin: 30px 0;
+        }
     </style>
-  </head>
-  <body>
-    <div class="email-wrapper">
-      <div class="email-header">
-        <h1>Welcome to NexBuy</h1>
-      </div>
-      <div class="email-body">
-        <p>Hello <%= name %>,</p>
-        <p>
-          Thank you for registering with Nexbuy. To activate your account,
-          please use the following activation code:
-        </p>
-        <h2><%= otp %></h2>
-        <p>
-          Please Enter this code on the activation page within the next 5
-          minutes.
-        </p>
-        <p>
-          If you did not register for a NexBuy account, please ignore this
-          email.
-        </p>
-      </div>
-      <div class="email-footer">
-        <p>
-          If you have any questions, please don't hesitate to contact us at
-          <a href="mailto:helmi.abouchakra@gmail.com"
-            >helmi.abouchakra@gmail.com</a
-          >
-        </p>
-      </div>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-card">
+            <div class="logo">
+                <span style="font-weight: bold; color: #202124;">NexBuy</span>
+            </div>
+
+            <h1>Verify your email address</h1>
+
+            <div class="message">
+                Hello <%= name %>,<br><br>
+                To help keep your NexBuy account secure, we need to verify your email address.
+                Use this code to complete your setup:
+            </div>
+
+            <div class="otp-box">
+                <%= otp %>
+            </div>
+
+            <div class="message" style="margin-top: 30px; font-size: 13px; color: #70757a;">
+                This code will expire in 5 minutes. If you didn't request this, you can safely
+                ignore this email.
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="message" style="font-size: 12px; color: #70757a;">
+                You received this email because it is a mandatory update regarding your account security.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Sent by NexBuy Inc., 1600 Amphitheatre Parkway, Mountain View, CA</p>
+            <p><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></p>
+        </div>
     </div>
-  </body>
+</body>
 </html>
