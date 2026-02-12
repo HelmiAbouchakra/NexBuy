@@ -1,12 +1,13 @@
 "use client";
-import { navItems } from "apps/user-ui/src/configs/constants";
-import useUser from "apps/user-ui/src/hooks/useUser";
+
 import { AlignLeft, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CartIcon from "../../../assets/svgs/cart-icon";
 import HeartIcon from "../../../assets/svgs/heart-icon";
 import ProfileIcon from "../../../assets/svgs/profile-icon";
+import useUser from "@/hooks/useUser";
+import { navItems } from "@/configs/constants";
 
 const HeaderBottom = () => {
   const [show, setShow] = useState(false);

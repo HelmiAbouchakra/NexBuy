@@ -1,12 +1,13 @@
 "use client";
-import useUser from "apps/user-ui/src/hooks/useUser";
+
+import CartIcon from "@/assets/svgs/cart-icon";
+import HeartIcon from "@/assets/svgs/heart-icon";
+import NexBuyIcon from "@/assets/svgs/nexbuy-icon";
+import ProfileIcon from "@/assets/svgs/profile-icon";
+import useUser from "@/hooks/useUser";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import CartIcon from "../../../assets/svgs/cart-icon";
-import HeartIcon from "../../../assets/svgs/heart-icon";
-import NexBuyIcon from "../../../assets/svgs/nexbuy-icon";
-import ProfileIcon from "../../../assets/svgs/profile-icon";
 import HeaderBottom from "./header-bottom";
 
 const Header = () => {

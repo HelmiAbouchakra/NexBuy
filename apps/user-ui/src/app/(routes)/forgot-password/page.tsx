@@ -1,5 +1,4 @@
 "use client";
-
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
@@ -46,7 +45,7 @@ const ForgotPassword = () => {
     mutationFn: async ({ email }: { email: string }) => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/forgot-password-user`,
-        { email }
+        { email },
       );
       return response.data;
     },
@@ -73,7 +72,7 @@ const ForgotPassword = () => {
         {
           email: userEmail,
           otp: otp.join(""),
-        }
+        },
       );
       return response.data;
     },
@@ -96,14 +95,14 @@ const ForgotPassword = () => {
         {
           email: userEmail,
           newPassword: password,
-        }
+        },
       );
       return response.data;
     },
     onSuccess: () => {
       setStep("email");
       toast.success(
-        "Password reset successfully! Please login with your new Password"
+        "Password reset successfully! Please login with your new Password",
       );
       setServerError(null);
       router.push("/login");
@@ -129,7 +128,7 @@ const ForgotPassword = () => {
 
   const handleOtpKeyDown = (
     index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
+    e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();

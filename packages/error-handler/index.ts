@@ -54,7 +54,7 @@ export class DatabaseError extends AppError {
 
 // Rate Limit Error (If user exceeds API limits)
 export class RateLimitError extends AppError {
-  constructor(message = "Too mant requests, please try again later") {
+  constructor(message = "Too many requests, please try again later") {
     super(message, 429);
   }
 }

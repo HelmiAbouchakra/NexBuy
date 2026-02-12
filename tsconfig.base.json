@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "baseUrl": ".",
     "lib": ["es2022"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node", "jest"],
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -18,8 +17,11 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
+
     "paths": {
-      "@packages/*": ["packages/*"]
+      "@packages/*": ["./packages/*"]
+      // "@seller-ui/*": ["./apps/seller-ui/src/*"],
+      // "@user-ui/*": ["./apps/user-ui/src/*"]
     }
   }
 }

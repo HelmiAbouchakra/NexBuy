@@ -15,15 +15,16 @@ import {
 } from "../utils/auth.helper";
 import { setCookie } from "../utils/cookies/setCookie";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-12-15.clover",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// {
+//   apiVersion: "2026-01-28.clover",
+// });
 
 // Register a new user
 export const userRegistration = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     validateRegistrationData(req.body, "user");
@@ -51,7 +52,7 @@ export const userRegistration = async (
 export const verifyUser = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, otp, password, name } = req.body;
@@ -85,7 +86,7 @@ export const verifyUser = async (
 export const loginUser = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, password } = req.body;
@@ -104,13 +105,16 @@ export const loginUser = async (
       return next(new AuthError("Invalid email or password"));
     }
 
+    res.clearCookie("seller-access-token");
+    res.clearCookie("seller-refresh-token");
+
     // Generate access and refresh token
     const accessToken = jwt.sign(
       { id: user.id, role: "user" },
       process.env.ACCESS_TOKEN_SECRET as string,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     const refreshToken = jwt.sign(
@@ -118,7 +122,7 @@ export const loginUser = async (
       process.env.REFRESH_TOKEN_SECRET as string,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     // store the refresh and access token in an httpOnly secure cookie
@@ -134,14 +138,17 @@ export const loginUser = async (
   }
 };
 
-// refresh token user
+// refresh token
 export const refreshToken = async (
-  req: Request,
+  req: any,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const refreshToken = req.cookies.refresh_token;
+    const refreshToken =
+      req.cookies["refresh_token"] ||
+      req.cookies["seller-refresh-token"] ||
+      req.headers.authorization?.split(" ")[1];
 
     if (!refreshToken) {
       throw new ValidationError("Unauthorized! No refresh token.");
@@ -149,28 +156,41 @@ export const refreshToken = async (
 
     const decoded = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string
+      process.env.REFRESH_TOKEN_SECRET as string,
     ) as { id: string; role: string };
 
     if (!decoded || !decoded.id || !decoded.role) {
-      return new JsonWebTokenError("Forbidden! Invalid refresh toke.");
+      throw new JsonWebTokenError("Forbidden! Invalid refresh toke.");
     }
 
-    // let account;
-    // if (decoded.role === "user")
-    const user = await prisma.users.findUnique({ where: { id: decoded.id } });
+    let account;
+    if (decoded.role === "user") {
+      account = await prisma.users.findUnique({ where: { id: decoded.id } });
+    } else if (decoded.role === "seller") {
+      account = await prisma.sellers.findUnique({
+        where: { id: decoded.id },
+        include: { shop: true },
+      });
+    }
 
-    if (!user) {
+    if (!account) {
       return new AuthError("Forbidden! User/Seller not found");
     }
 
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
       process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
     );
 
-    setCookie(res, "access_token", newAccessToken);
+    if (decoded.role === "user") {
+      setCookie(res, "access_token", newAccessToken);
+    } else if (decoded.role === "seller") {
+      setCookie(res, "seller-access-token", newAccessToken);
+    }
+
+    req.role = decoded.role;
+
     return res.status(201).json({ success: true });
   } catch (error) {
     return next(error);
@@ -194,7 +214,7 @@ export const getUser = async (req: any, res: Response, next: NextFunction) => {
 export const userForgotPassword = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   await handleForgotPassword(req, res, next, "user");
 };
@@ -203,7 +223,7 @@ export const userForgotPassword = async (
 export const verifyUserForgotPassword = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   await verifyForgotPasswordOtp(req, res, next);
 };
@@ -212,7 +232,7 @@ export const verifyUserForgotPassword = async (
 export const resetUserPassword = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, newPassword } = req.body;
@@ -229,8 +249,8 @@ export const resetUserPassword = async (
     if (isSamePassword) {
       return next(
         new ValidationError(
-          "New password cannot be the same as the old password!"
-        )
+          "New password cannot be the same as the old password!",
+        ),
       );
     }
 
@@ -252,7 +272,7 @@ export const resetUserPassword = async (
 export const registerSeller = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     validateRegistrationData(req.body, "seller");
@@ -280,7 +300,7 @@ export const registerSeller = async (
 export const verifySeller = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, otp, password, name, phone_number, country } = req.body;
@@ -293,7 +313,7 @@ export const verifySeller = async (
     });
     if (existingSeller) {
       return next(
-        new ValidationError("Seller already exists with this email!")
+        new ValidationError("Seller already exists with this email!"),
       );
     }
 
@@ -316,7 +336,7 @@ export const verifySeller = async (
 export const createShop = async (
   req: any,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { name, bio, address, opening_hours, website, category, sellerId } =
@@ -355,7 +375,7 @@ export const createShop = async (
 export const createStripeConnectLink = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { sellerId } = req.body;
@@ -400,7 +420,7 @@ export const createStripeConnectLink = async (
 export const loginSeller = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, password } = req.body;
@@ -419,16 +439,19 @@ export const loginSeller = async (
       return next(new ValidationError("Invalid email or password!"));
     }
 
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+
     // Generate access and refresh tokens
     const accessToken = jwt.sign(
-      { id: seller.id, role: seller },
+      { id: seller.id, role: "seller" },
       process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
     );
     const refreshToken = jwt.sign(
-      { id: seller.id, role: seller },
+      { id: seller.id, role: "seller" },
       process.env.REFRESH_TOKEN_SECRET as string,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     // store refresh token and access token
@@ -448,7 +471,7 @@ export const loginSeller = async (
 export const getSeller = async (
   req: any,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const seller = req.seller;
