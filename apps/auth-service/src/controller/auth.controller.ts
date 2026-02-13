@@ -140,7 +140,7 @@ export const loginUser = async (
 
 // refresh token
 export const refreshToken = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
@@ -189,7 +189,7 @@ export const refreshToken = async (
       setCookie(res, "seller-access-token", newAccessToken);
     }
 
-    req.role = decoded.role;
+    // req.role = decoded.role;
 
     return res.status(201).json({ success: true });
   } catch (error) {
