@@ -1,6 +1,7 @@
+import CustomDropdown from "@/shared/components/custom-dropdown";
+import { shopCategories } from "@/utils/categories";
 import { useMutation } from "@tanstack/react-query";
-import CustomDropdown from "apps/seller-ui/src/shared/components/custom-dropdown";
-import { shopCategories } from "apps/seller-ui/src/utils/categories";
+
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";

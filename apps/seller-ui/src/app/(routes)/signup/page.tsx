@@ -1,10 +1,11 @@
 "use client";
 
+import StripeLogo from "@/assets/svgs/stripe-logo";
+import CustomDropdown from "@/shared/components/custom-dropdown";
+import CreateShop from "@/shared/modules/auth/create-shop";
+import { countries } from "@/utils/countries";
 import { useMutation } from "@tanstack/react-query";
-import StripeLogo from "apps/seller-ui/src/assets/svgs/stripe-logo";
-import CustomDropdown from "apps/seller-ui/src/shared/components/custom-dropdown";
-import CreateShop from "apps/seller-ui/src/shared/modules/auth/create-shop";
-import { countries } from "apps/seller-ui/src/utils/coutries";
+
 import axios, { AxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
